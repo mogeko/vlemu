@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/kms", "crates/kms-sys", "crates/vlmgr"]
+resolver = "2"
