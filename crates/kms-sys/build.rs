@@ -12,8 +12,10 @@ fn main() {
     }
 
     let dst = PathBuf::from(env::var_os("OUT_DIR").unwrap());
+    let version = concat!("\"", env!("CARGO_PKG_VERSION"), "\"");
 
     cfg.include("./src")
+        .define("VERSION", version)
         .define("CONFIG", "\"config.h\"")
         .define("IS_LIBRARY", "1")
         .define("SIMPLE_SOCKETS", None)
