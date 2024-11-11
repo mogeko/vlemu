@@ -5,15 +5,33 @@ use std::{env, fs};
 
 fn main() {
     let mut cfg = cc::Build::new();
-    let target = env::var("TARGET").unwrap();
 
-    if target.contains("windows") {
-        cfg.define("_WIN32", None).flag_if_supported("-UUSE_MSRPC");
-    }
+    #[cfg(any(feature = "polarssl", feature = "openssl"))]
+    println!("cargo:warning=It is strongly recommended not to use an external crypto library.");
+    #[cfg(all(feature = "polarssl", feature = "openssl"))]
+    compile_error!("Do not define both \"openssl\" and \"polarssl\"");
 
-    if target.contains("apple") {
-        cfg.flag_if_supported("-Wno-deprecated-declarations");
-    }
+    #[cfg(all(feature = "openssl", not(target_os = "windows")))]
+    cfg.define("_CRYPTO_OPENSSL", None);
+    #[cfg(all(feature = "openssl-no-hmac", not(target_os = "windows")))]
+    cfg.define("_OPENSSL_NO_HMAC", None);
+    #[cfg(all(feature = "openssl-aes", not(target_os = "windows")))]
+    cfg.define("_USE_AES_FROM_OPENSSL", None);
+    #[cfg(all(feature = "openssl-software", not(target_os = "windows")))]
+    cfg.define("_OPENSSL_SOFTWARE", None);
+    #[cfg(all(feature = "openssl", not(target_os = "windows")))]
+    cfg.file("./src/crypto_openssl.c");
+    #[cfg(all(feature = "polarssl", not(target_os = "windows")))]
+    cfg.define("_CRYPTO_POLARSSL", None);
+
+    #[cfg(target_os = "windows")]
+    cfg.define("_WIN32", None).flag_if_supported("-UUSE_MSRPC");
+
+    #[cfg(any(target_os = "macos", target_os = "ios"))]
+    cfg.flag_if_supported("-Wno-deprecated-declarations");
+
+    #[cfg(all(feature = "use-auxv", target_os = "linux"))]
+    cfg.define("USE_AUXV", None);
 
     let dst = PathBuf::from(env::var_os("OUT_DIR").unwrap());
     let version = env::var("CARGO_PKG_VERSION").unwrap();
@@ -48,6 +66,6 @@ fn main() {
     let include = dst.join("include");
     fs::create_dir_all(&include).unwrap();
     fs::copy(src.join("libkms.h"), dst.join("include/libkms.h")).unwrap();
-    println!("cargo::rustc-link-search={}", dst.join("include").display());
+    println!("cargo::rustc-link-search=native={}", include.display());
     println!("cargo::rustc-link-lib=static=kms");
 }

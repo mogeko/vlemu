@@ -17,3 +17,12 @@ non_camel_case_types = "allow"
 
 [build-dependencies]
 cc = "1.1.37"
+
+[features]
+default = ["use-auxv"]
+use-auxv = []
+openssl = []                                  # Not recommended
+openssl-no-hmac = ["openssl"]                 # Not recommended
+openssl-aes = ["openssl"]                     # Not recommended
+openssl-software = ["openssl", "openssl-aes"] # Not recommended
+polarssl = []                                 # Not recommended

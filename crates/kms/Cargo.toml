@@ -5,3 +5,12 @@ edition = "2021"
 
 [dependencies]
 kms-sys = { path = "../kms-sys" }
+
+[features]
+default = ["use-auxv"]
+use-auxv = ["kms-sys/use-auxv"]
+openssl = ["kms-sys/openssl"]                   # Not recommended
+openssl-no-hmac = ["kms-sys/openssl-no-hmac"]   # Not recommended
+openssl-aes = ["kms-sys/openssl-aes"]           # Not recommended
+openssl-software = ["kms-sys/openssl-software"] # Not recommended
+polarssl = ["kms-sys/polarssl"]                 # Not recommended
