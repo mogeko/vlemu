@@ -11,12 +11,16 @@ fn main() {
         cfg.flag_if_supported("-Wno-deprecated-declarations");
     }
 
+    if target.contains("windows") {
+        cfg.define("_WIN32", None);
+    }
+
     let dst = PathBuf::from(env::var_os("OUT_DIR").unwrap());
-    let version = concat!("\"", env!("CARGO_PKG_VERSION"), "\"");
+    let version = env::var("CARGO_PKG_VERSION").unwrap();
 
     cfg.include("./src")
-        .define("VERSION", version)
         .define("CONFIG", "\"config.h\"")
+        .define("VERSION", format!("\"{version}\"").as_str())
         .define("IS_LIBRARY", "1")
         .define("SIMPLE_SOCKETS", None)
         .define("NO_TIMEOUT", None)
