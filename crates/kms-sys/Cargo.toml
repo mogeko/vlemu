@@ -1,5 +1,5 @@
 [package]
-name = "kms"
+name = "kms-sys"
 build = "build.rs"
 links = "kms"
 version = "0.0.1"
