@@ -38,6 +38,8 @@ fn main() {
         .flag_if_supported("-fomit-frame-pointer")
         .flag_if_supported("-fvisibility=hidden")
         .flag_if_supported("-Wno-single-bit-bitfield-constant-conversion")
+        .flag_if_supported("-Wno-unused-parameter")
+        .flag_if_supported("-Wno-ignored-qualifiers")
         .flag_if_supported("-UNO_SOCKETS")
         .flag_if_supported("-USIMPLE_RPC")
         .flag_if_supported("-UUSE_MSRPC")

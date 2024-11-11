@@ -9,5 +9,11 @@ categories = ["external-ffi-bindings"]
 [lib]
 path = "bindings.rs"
 
+[lints.rust]
+non_upper_case_globals = "allow"
+non_snake_case = "allow"
+non_camel_case_types = "allow"
+
+
 [build-dependencies]
 cc = "1.1.37"
