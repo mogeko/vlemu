@@ -21,3 +21,6 @@ trim_trailing_whitespace = false
 
 [Makefile,GNUmakefile]
 indent_style = tab
+
+[*.{yaml,yml}]
+indent_size = 2
